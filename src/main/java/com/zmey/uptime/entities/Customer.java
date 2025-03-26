@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Customer {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private String id;
+    private Long id;
 
     @NotBlank
     private String name;
