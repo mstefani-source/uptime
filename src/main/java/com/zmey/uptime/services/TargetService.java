@@ -24,9 +24,6 @@ public class TargetService {
 
     public Target createTarget(Target target) {
 
-        // target.setCreatedAt(LocalDate.now());
-        // target.setUpdatedAt(LocalDate.now());
-
         return repository.save(target);
         
     }
