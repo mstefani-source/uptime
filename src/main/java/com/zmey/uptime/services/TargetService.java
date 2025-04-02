@@ -1,6 +1,5 @@
 package com.zmey.uptime.services;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +24,8 @@ public class TargetService {
 
     public Target createTarget(Target target) {
 
-        target.setCreatedAt(LocalDate.now());
-        target.setUpdatedAt(LocalDate.now());
+        // target.setCreatedAt(LocalDate.now());
+        // target.setUpdatedAt(LocalDate.now());
 
         return repository.save(target);
         

@@ -2,18 +2,12 @@ package com.zmey.uptime.entities;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.CreatedDate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,12 +35,12 @@ public class Target implements BaseTarget {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @LastModifiedDate
     @NotNull
+    @LastModifiedDate
     private LocalDate updatedAt;
 
-    @CreatedDate
     @NotNull
+    @CreatedDate
     private LocalDate createdAt;
 
 }
