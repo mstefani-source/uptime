@@ -1,18 +1,23 @@
 package com.zmey.uptime.services;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 // import java.util.List;
 // import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import com.zmey.uptime.repositories.TargetRepository;
+
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.nodes.Tag;
 
 import com.zmey.uptime.entities.Target;
 
 @Service
+@Log4j2
 public class TargetService {
 
     @Autowired
@@ -27,10 +32,26 @@ public class TargetService {
         
     }
 
-    public Target updateTarget(Target target) {
+    public void deleteTarget(Long id) {
+        log.info("deleting target " + id );
 
-        
+        repository.deleteById(id);
+
+    }
+
+    public Target updateTarget(Target target) {
+       
         return repository.save(target);
+    }
+
+
+    public Optional<Target> findById (Long id) {
+
+        return repository.findById(id);
+    }
+
+    public List<Target> findAll() {
+        return repository.findAll();
     }
 
     // public List<Target> findAll(String customerId) {

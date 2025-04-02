@@ -9,13 +9,4 @@ import com.zmey.uptime.entities.Target;
 
 public interface TargetRepository extends JpaRepository <Target, Long>  {
     Optional<Target> findById(Long id);
-    // Optional<List<Target>> findAllByCustomerId(Long customerId);
-    //<S extends Target> S save(S target);
-
-
-
-
-
-    // Target save(Target target);
-
 }
