@@ -1,13 +1,12 @@
 package com.zmey.uptime.entities;
-
 import static jakarta.persistence.GenerationType.IDENTITY;
-
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.CreatedDate;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,12 +36,54 @@ public class Target implements BaseTarget {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @NotNull
     @LastModifiedDate
-    private LocalDate updatedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedAt;
 
-    @NotNull
     @CreatedDate
-    private LocalDate createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Target newTarget = (Target) obj;
+
+        return (customer == newTarget.customer || customer != null && customer.equals(newTarget.customer))
+            && (url == newTarget.url || url != null && url.equals(newTarget.url))
+            && (name == newTarget.name || name != null && name.equals(newTarget.name))
+            && (description == newTarget.description || description != null && description.equals(newTarget.description));
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((customer == null) ? 0 : customer.hashCode());
+        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((description == null) ? 0 : description.hashCode());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", customer='" + customer + '\'' +
+                ", url='" + url + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 
 }

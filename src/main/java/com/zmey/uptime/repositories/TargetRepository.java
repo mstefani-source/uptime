@@ -7,4 +7,5 @@ import com.zmey.uptime.entities.Target;
 
 public interface TargetRepository extends JpaRepository <Target, Long>  {
     Optional<Target> findById(Long id);
+    Optional<Target> findByUrl(String url);
 }
