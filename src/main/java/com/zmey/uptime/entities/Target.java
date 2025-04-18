@@ -1,4 +1,5 @@
 package com.zmey.uptime.entities;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -6,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.CreatedDate;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,11 +37,9 @@ public class Target implements BaseTarget {
     private String description;
 
     @LastModifiedDate
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
     @CreatedDate
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @Override
@@ -57,9 +55,10 @@ public class Target implements BaseTarget {
         Target newTarget = (Target) obj;
 
         return (customer == newTarget.customer || customer != null && customer.equals(newTarget.customer))
-            && (url == newTarget.url || url != null && url.equals(newTarget.url))
-            && (name == newTarget.name || name != null && name.equals(newTarget.name))
-            && (description == newTarget.description || description != null && description.equals(newTarget.description));
+                && (url == newTarget.url || url != null && url.equals(newTarget.url))
+                && (name == newTarget.name || name != null && name.equals(newTarget.name))
+                && (description == newTarget.description
+                        || description != null && description.equals(newTarget.description));
     }
 
     @Override
@@ -75,15 +74,9 @@ public class Target implements BaseTarget {
 
     @Override
     public String toString() {
-        return "{" +
-                "id=" + id +
-                ", customer='" + customer + '\'' +
-                ", url='" + url + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", updatedAt=" + updatedAt +
-                ", createdAt=" + createdAt +
-                '}';
+        return "{" + "id=" + id + ", customer='" + customer + '\'' + ", url='" + url + '\'' + ", name='" + name + '\''
+                + ", description='" + description + '\'' + ", updatedAt=" + updatedAt + ", createdAt=" + createdAt
+                + '}';
     }
 
 }

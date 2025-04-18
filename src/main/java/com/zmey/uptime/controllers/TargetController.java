@@ -35,7 +35,8 @@ public class TargetController {
     @PostMapping()
     @ResponseBody
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Target createTarget(@RequestBody Target target) {
+    public Target createTarget(@RequestBody Target target)
+    {
         return targetService.createTarget(target);
     }
 
@@ -67,9 +68,9 @@ public class TargetController {
         return targetService.findById(id).orElseThrow(() -> new EntityNotFoundException("Target not found"));
     }
 
+    
     @PutMapping("/{id}")
     public Target update(@PathVariable Long id, @RequestBody Target target) {
-
         return targetService.findById(id).map(existingTarget -> {
             existingTarget.setName(target.getName());
             existingTarget.setCustomer(target.getCustomer());

@@ -2,11 +2,9 @@ package com.zmey.uptime.services;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import com.zmey.uptime.repositories.TargetRepository;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.stereotype.Service;
 
 import com.zmey.uptime.entities.Target;
