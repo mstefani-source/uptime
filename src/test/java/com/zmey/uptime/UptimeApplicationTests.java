@@ -3,36 +3,41 @@ package com.zmey.uptime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@SpringBootTest
+import com.zmey.uptime.repositories.TargetRepository;
+
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class UptimeApplicationTests {
-
+	
 	@LocalServerPort
-	private Integer port;
-
-	// @Autowired
-	// TargetRepository targetRepository;
-
+	private int port;
+	
+	@Autowired
+	TargetRepository targetRepository;
+	
 	@Container
 	@ServiceConnection
 	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine");
-
+	
 	// start container
 	@BeforeAll
 	static void beforeAll() {
 		postgres.start();
 	}
-
+	
 	// stop container
 	@AfterAll
 	static void afterAll() {
 		postgres.stop();
 	}
+	
 
 	// @BeforeEach
 	// void setUp() {
