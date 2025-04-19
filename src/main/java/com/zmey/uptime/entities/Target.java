@@ -42,6 +42,13 @@ public class Target implements BaseTarget {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    public Target(String customer, String url, String name, String description) {
+        this.customer = customer;
+        this.url = url;
+        this.name = name;
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
