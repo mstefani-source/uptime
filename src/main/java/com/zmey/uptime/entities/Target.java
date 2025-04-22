@@ -1,39 +1,44 @@
 package com.zmey.uptime.entities;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.annotation.CreatedDate;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+
+@Data
 @Entity
 @Table(name = "targets")
 @EntityListeners(AuditingEntityListener.class)
-@Setter
-@Getter
-@NoArgsConstructor
 public class Target implements BaseTarget {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @NotBlank
-    private String customer;
+    // @NotBlank
+    @ManyToMany
+    private Customer customer;
 
     @Column(unique = true)
     @NotNull
     private String url;
 
-    @NotBlank
+    // @NotBlank
     private String name;
 
-    @NotBlank
+    // @NotBlank
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -43,7 +48,7 @@ public class Target implements BaseTarget {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Target(String customer, String url, String name, String description) {
+    public Target(Customer customer, String url, String name, String description) {
         this.customer = customer;
         this.url = url;
         this.name = name;
@@ -64,8 +69,8 @@ public class Target implements BaseTarget {
 
         return (customer == newTarget.customer || customer != null && customer.equals(newTarget.customer))
                 && (url == newTarget.url || url != null && url.equals(newTarget.url))
-                && (name == newTarget.name || name != null && name.equals(newTarget.name))
-                && (description == newTarget.description
+                && ((name == null ? newTarget.name == null : name.equals(newTarget.name)) || name != null && name.equals(newTarget.name))
+                && ((description == null ? newTarget.description == null : description.equals(newTarget.description))
                         || description != null && description.equals(newTarget.description));
     }
 
