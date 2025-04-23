@@ -9,14 +9,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import lombok.Data;
-
 
 @Data
 @Entity
@@ -28,7 +29,8 @@ public class Target implements BaseTarget {
     private Long id;
 
     // @NotBlank
-    @ManyToMany
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Column(unique = true)
@@ -69,7 +71,8 @@ public class Target implements BaseTarget {
 
         return (customer == newTarget.customer || customer != null && customer.equals(newTarget.customer))
                 && (url == newTarget.url || url != null && url.equals(newTarget.url))
-                && ((name == null ? newTarget.name == null : name.equals(newTarget.name)) || name != null && name.equals(newTarget.name))
+                && ((name == null ? newTarget.name == null : name.equals(newTarget.name))
+                        || name != null && name.equals(newTarget.name))
                 && ((description == null ? newTarget.description == null : description.equals(newTarget.description))
                         || description != null && description.equals(newTarget.description));
     }
@@ -87,7 +90,7 @@ public class Target implements BaseTarget {
 
     @Override
     public String toString() {
-        return "{" + "id=" + id + ", customer='" + customer + '\'' + ", url='" + url + '\'' + ", name='" + name + '\''
+        return "{" + "id=" + id + ", customer='" + customer.toString() + '\'' + ", url='" + url + '\'' + ", name='" + name + '\''
                 + ", description='" + description + '\'' + ", updatedAt=" + updatedAt + ", createdAt=" + createdAt
                 + '}';
     }

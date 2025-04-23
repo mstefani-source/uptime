@@ -36,7 +36,8 @@ public class TargetController {
     @ResponseBody
     @ResponseStatus(code = HttpStatus.CREATED)
     public Target createTarget(@RequestBody Target target)
-    {
+    {   
+        logger.info("target " + target);
         return targetService.createTarget(target);
     }
 

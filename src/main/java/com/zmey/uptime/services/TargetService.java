@@ -7,6 +7,7 @@ import com.zmey.uptime.repositories.TargetRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.Target;
 
 @Service
@@ -17,6 +18,9 @@ public class TargetService {
     private TargetRepository repository;
 
     public Target createTarget(Target target) {
+        Customer customer = new Customer();
+        customer.setName(target.getName());
+        
         return repository.save(target);
     }
 
