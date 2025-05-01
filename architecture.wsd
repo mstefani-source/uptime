@@ -1,0 +1,28 @@
+@startuml
+scale 2
+left to right direction
+
+rectangle UptimeApplication {
+    class TargetController {
+        +createTarget()
+        +removeTarget()
+        +updateTarget()
+        +findAllTargets()
+        +findTargetById()
+    }
+
+    
+}
+
+
+rectangle Database {
+database db [
+   Postgres
+   ----
+]
+
+}
+
+UptimeApplication <===> Database
+
+@enduml
