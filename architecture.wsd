@@ -10,8 +10,6 @@ rectangle UptimeApplication {
         +findAllTargets()
         +findTargetById()
     }
-
-    
 }
 
 

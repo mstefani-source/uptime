@@ -30,7 +30,7 @@ public class Target implements BaseTarget {
 
     // @NotBlank
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
     @Column(unique = true)
