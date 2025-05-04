@@ -18,10 +18,12 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "targets")
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Target implements BaseTarget {
     @Id

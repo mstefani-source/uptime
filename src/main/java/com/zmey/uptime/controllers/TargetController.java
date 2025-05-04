@@ -3,6 +3,7 @@ package com.zmey.uptime.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zmey.uptime.dto.CreateTargetDto;
+import com.zmey.uptime.dto.ReadTargetDto;
+import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.services.TargetService;
 
@@ -35,9 +39,7 @@ public class TargetController {
     @PostMapping()
     @ResponseBody
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Target createTarget(@RequestBody Target target)
-    {   
-        logger.info("target " + target);
+    public Target createTarget(@RequestBody CreateTargetDto target) {
         return targetService.createTarget(target);
     }
 
@@ -64,12 +66,16 @@ public class TargetController {
     }
 
     @GetMapping("/{id}")
-    public Target findTargetById(@PathVariable Long id) {
+    public ResponseEntity<ReadTargetDto> findTargetById(@PathVariable Long id) {
 
-        return targetService.findById(id).orElseThrow(() -> new EntityNotFoundException("Target not found"));
+        Target target = targetService.findById(id).orElseThrow(() -> new EntityNotFoundException("Target not found"));
+
+        ReadTargetDto tdto = new ReadTargetDto(target.getId(), target.getCustomer().getId(), target.getUrl());
+
+        return new ResponseEntity<>(tdto, HttpStatus.OK);
+
     }
 
-    
     @PutMapping("/{id}")
     public Target update(@PathVariable Long id, @RequestBody Target target) {
         return targetService.findById(id).map((Target existingTarget) -> {
