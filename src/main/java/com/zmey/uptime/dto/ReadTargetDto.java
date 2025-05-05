@@ -11,4 +11,5 @@ public class ReadTargetDto {
     private Long id;
     private Long customerId;
     private String url;
+    private String description;
 }

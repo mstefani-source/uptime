@@ -1,7 +1,10 @@
 package com.zmey.uptime.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.catalina.connector.Response;
 import org.apache.logging.log4j.LogManager;
@@ -60,9 +63,14 @@ public class TargetController {
     }
 
     @GetMapping()
-    public List<Target> findAllTargets() {
+    public List<ReadTargetDto> findAllTargets() {
 
-        return targetService.findAll();
+        List<Target> targets = targetService.findAll();
+        List<ReadTargetDto> result = targets.stream()
+            .map(element -> toDto(element))
+            .collect(Collectors.toList());
+
+        return result;
     }
 
     @GetMapping("/{id}")
@@ -70,9 +78,10 @@ public class TargetController {
 
         Target target = targetService.findById(id).orElseThrow(() -> new EntityNotFoundException("Target not found"));
 
-        ReadTargetDto tdto = new ReadTargetDto(target.getId(), target.getCustomer().getId(), target.getUrl());
+        // ReadTargetDto tdto = new ReadTargetDto(target.getId(), target.getCustomer().getId(), target.getUrl(),
+        //         target.getDescription());
 
-        return new ResponseEntity<>(tdto, HttpStatus.OK);
+        return new ResponseEntity<>(toDto(target), HttpStatus.OK);
 
     }
 
@@ -87,6 +96,11 @@ public class TargetController {
             return targetService.updateTarget(existingTarget);
         }).orElseThrow(() -> new EntityNotFoundException("Target not found"));
 
+    }
+
+    private ReadTargetDto toDto(Target target) {
+        return new ReadTargetDto(target.getId(), target.getCustomer().getId(), target.getUrl(),
+        target.getDescription());
     }
 
 }

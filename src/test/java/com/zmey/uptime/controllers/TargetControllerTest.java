@@ -54,7 +54,7 @@ class TargetControllerTest {
 
         Customer customer = new Customer();
 
-        customer.setName("Africa");
+        customer.setName("Ivanov");
         customerRepository.save(customer);
 
         List<Target> targets = new ArrayList<>();
