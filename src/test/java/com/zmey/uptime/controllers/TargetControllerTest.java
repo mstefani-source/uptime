@@ -23,6 +23,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.Target;
+import com.zmey.uptime.repositories.CustomerRepository;
 import com.zmey.uptime.repositories.TargetRepository;
 
 import io.restassured.RestAssured;
@@ -39,6 +40,9 @@ class TargetControllerTest {
     @Autowired
     TargetRepository targetRepository;
 
+    @Autowired
+    CustomerRepository customerRepository;
+
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine");
@@ -51,6 +55,7 @@ class TargetControllerTest {
         Customer customer = new Customer();
 
         customer.setName("Africa");
+        customerRepository.save(customer);
 
         List<Target> targets = new ArrayList<>();
         targets.add(new Target(customer, "http://durban.za", "SA", "beauteful beaches of SA"));

@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -30,8 +31,7 @@ public class Target implements BaseTarget {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    // @NotBlank
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
@@ -39,10 +39,8 @@ public class Target implements BaseTarget {
     @NotNull
     private String url;
 
-    // @NotBlank
     private String name;
 
-    // @NotBlank
     @Column(columnDefinition = "TEXT")
     private String description;
 

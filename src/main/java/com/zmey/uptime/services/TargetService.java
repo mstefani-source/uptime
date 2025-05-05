@@ -30,7 +30,7 @@ public class TargetService {
     public Target createTarget(CreateTargetDto targetDto) {
 
         Customer customer = customerRepository.findById(targetDto.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("customer_id not exist"));
+                .orElseThrow(() -> new IllegalArgumentException("Customer_id not exist"));
         Target target = new Target();
         target.setCustomer(customer);
         target.setName(targetDto.getName());
