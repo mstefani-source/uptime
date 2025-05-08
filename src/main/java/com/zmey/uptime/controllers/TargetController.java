@@ -1,12 +1,9 @@
 package com.zmey.uptime.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.apache.catalina.connector.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zmey.uptime.dto.CreateTargetDto;
 import com.zmey.uptime.dto.ReadTargetDto;
-import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.services.TargetService;
 

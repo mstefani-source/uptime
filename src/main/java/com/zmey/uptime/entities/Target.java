@@ -1,6 +1,7 @@
 package com.zmey.uptime.entities;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -12,16 +13,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import static jakarta.persistence.GenerationType.IDENTITY;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
+@ToString
 @Entity
 @Table(name = "targets")
 @NoArgsConstructor
@@ -31,7 +36,7 @@ public class Target implements BaseTarget {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
@@ -69,12 +74,12 @@ public class Target implements BaseTarget {
 
         Target newTarget = (Target) obj;
 
-        return (customer == newTarget.customer || customer != null && customer.equals(newTarget.customer))
-                && (url == newTarget.url || url != null && url.equals(newTarget.url))
-                && ((name == null ? newTarget.name == null : name.equals(newTarget.name))
-                        || name != null && name.equals(newTarget.name))
-                && ((description == null ? newTarget.description == null : description.equals(newTarget.description))
-                        || description != null && description.equals(newTarget.description));
+        return (Objects.equals(customer, newTarget.customer))
+                && (Objects.equals(url, newTarget.url))
+                && ((Objects.equals(name, newTarget.name))
+                || name != null && name.equals(newTarget.name))
+                && ((Objects.equals(description, newTarget.description))
+                || description != null && description.equals(newTarget.description));
     }
 
     @Override
@@ -88,11 +93,17 @@ public class Target implements BaseTarget {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "{" + "id=" + id + ", customer='" + customer.toString() + '\'' + ", url='" + url + '\'' + ", name='" + name + '\''
-                + ", description='" + description + '\'' + ", updatedAt=" + updatedAt + ", createdAt=" + createdAt
-                + '}';
-    }
+    // @Override
+    // public String toString() {
+    //     return "{" 
+    //             + "id=" + id 
+    //             + ", customer=" + customer.toString() 
+    //             + ", url=" + url 
+    //             + ", name=" + name
+    //             + ", description=" + description 
+    //             + ", updatedAt=" + updatedAt 
+    //             + ", createdAt=" + createdAt
+    //             + "}";
+    // }
 
 }
