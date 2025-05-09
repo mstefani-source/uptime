@@ -22,5 +22,6 @@ public class Customer {
     private Long id;
 
     @NotBlank
+    @Column(unique = true)
     private String name;
 }

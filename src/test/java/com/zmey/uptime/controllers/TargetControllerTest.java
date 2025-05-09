@@ -68,6 +68,7 @@ class TargetControllerTest {
     void setUp(TestInfo testInfo) {
         RestAssured.baseURI = "http://localhost:" + port;
         targetRepository.deleteAll();
+        customerRepository.deleteAll();
         Customer customer = new Customer();
         customer.setName("Ivanov");
         customerRepository.save(customer);
@@ -183,5 +184,21 @@ class TargetControllerTest {
                 .delete("/targets/{id}")
                 .then()
                 .statusCode(404);
+    }
+
+    @Test
+    @DisplayName("Should return 500 if Customer having a Target")
+    void removeCustomerWithTargets(){
+        Customer customer = customerRepository.findAll().stream().findFirst().orElseThrow(NoSuchElementException::new);
+        List<Target> targets = targetRepository.findAll();
+        assertEquals(10, targets.size());
+        assertEquals(1, customerRepository.findAll().size());
+
+        given()
+                .pathParam("id", customer.getId())
+                .when()
+                .delete("/customers/{id}")
+                .then()
+                .statusCode(500);
     }
 }
