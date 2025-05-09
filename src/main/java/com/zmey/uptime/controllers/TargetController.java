@@ -74,9 +74,6 @@ public class TargetController {
 
         Target target = targetService.findById(id).orElseThrow(() -> new EntityNotFoundException("Target not found"));
 
-        // ReadTargetDto tdto = new ReadTargetDto(target.getId(), target.getCustomer().getId(), target.getUrl(),
-        //         target.getDescription());
-
         return new ResponseEntity<>(toDto(target), HttpStatus.OK);
 
     }

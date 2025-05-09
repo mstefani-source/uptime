@@ -3,6 +3,7 @@ package com.zmey.uptime.controllers;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasKey;
 
+import com.github.dockerjava.api.exception.NotFoundException;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zmey.uptime.entities.Target;
 import jakarta.activation.DataSource;
@@ -64,7 +65,7 @@ class TargetControllerTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp(TestInfo testInfo) {
         RestAssured.baseURI = "http://localhost:" + port;
         targetRepository.deleteAll();
         Customer customer = new Customer();
@@ -83,7 +84,7 @@ class TargetControllerTest {
                 new Target(customer, "http://welkom.za", "SA", "city of SA"),
                 new Target(customer, "http://boxburg.za", "SA", "city of SA"));
         targetRepository.saveAll(targets);
-        logger.info("BeforeEach done!");
+        logger.info("Before {}",testInfo.getDisplayName());
     }
 
     @AfterEach
@@ -147,15 +148,13 @@ class TargetControllerTest {
         // Given
         assertEquals(10, targetRepository.findAll().size());
 
-        Customer customer = new Customer();
-        customer.setName("Ivanov");
-        customerRepository.save(customer);
+        Customer existingCustomer = customerRepository.findAll().stream()
+                .findFirst()
+                .orElseThrow(NoSuchElementException::new);
 
-        Target target = new Target(customer, "http://china.cn", "CN", "city of China");
+        Target target = new Target(existingCustomer, "http://china.cn", "CN", "city of China");
         Target savedTarget = targetRepository.save(target);
-
         assertEquals(11, targetRepository.findAll().size());
-
 
         // When
         given()

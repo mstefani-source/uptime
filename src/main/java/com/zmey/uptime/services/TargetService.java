@@ -1,21 +1,16 @@
 package com.zmey.uptime.services;
 
-import java.util.List;
-import java.util.Optional;
-
-import lombok.extern.log4j.Log4j2;
-
-import com.zmey.uptime.entities.Target;
-
-import org.springframework.stereotype.Service;
-
-import com.zmey.uptime.repositories.TargetRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.zmey.uptime.dto.CreateTargetDto;
 import com.zmey.uptime.entities.Customer;
+import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.repositories.CustomerRepository;
+import com.zmey.uptime.repositories.TargetRepository;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
