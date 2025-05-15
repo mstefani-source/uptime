@@ -1,20 +1,25 @@
 package com.zmey.uptime.services.targetprocessor;
 
-import org.springframework.stereotype.Component;
-
+import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class ProcessFactory {
-    private final Map<String, Supplier<TargetProcess>> supplier = Map.of(
-            "TypeOne", ProcessOne::new,
-            "TypeTwo", ProcessTwo::new,
-            "TypeThree", ProcessThree::new
-    );
 
-    public TargetProcess generateTargetProcess(String type) {
-        return supplier.getOrDefault(type,  ProcessThree::new).get();
+    private List<TargetProcess> processes;
+
+    private final Map<String, TargetProcess>  targetProcessMap = processes.stream().collect(Collectors.toMap(TargetProcess::getType, Function.identity()));
+
+    public ProcessFactory(List<TargetProcess> processes) {
+        this.processes = processes;
+    }
+
+    public TargetProcess getTargetProcess(String type) {
+        return targetProcessMap.getOrDefault(type, null);
     }
 }
 

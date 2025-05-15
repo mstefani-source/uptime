@@ -3,16 +3,16 @@ package com.zmey.uptime.services.targetprocessor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProcessThree implements TargetProcess {
+public class ProcessFour implements TargetProcess {
 
     @Override
     public String process() {
 
-        return "process Type Three";
+        return "I am process Type Four";
     }
 
     @Override
     public String getType() {
-        return "three";
+        return "Four";
     }
 }

@@ -8,7 +8,9 @@ package com.zmey.uptime.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.zmey.uptime.dto.CustomerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +26,19 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public Customer createCustomer(Customer customer) {
+    public Customer createCustomer(CustomerDto customerDto) {
+        Customer customer = new Customer();
+        customer.setName(customerDto.getName());
         return customerRepository.save(customer);
     }
 
-    public List<Customer> findAllCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerDto> findAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+
+        return customers
+                .stream()
+                .map((customer) -> new CustomerDto(customer.getName()))
+                .toList();
     }
 
     public Optional<Customer> findById(Long id) {

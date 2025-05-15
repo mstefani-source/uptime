@@ -3,6 +3,7 @@ package com.zmey.uptime.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.zmey.uptime.dto.CustomerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,13 @@ public class CustomerController {
     @PostMapping()
     @ResponseBody
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Customer createCustomer(@RequestBody Customer customer) {
+    public Customer createCustomer(@RequestBody CustomerDto customer) {
 
         return customerService.createCustomer(customer);
     }
 
     @GetMapping()
-    public List<Customer> findAllCustomers() {
+    public List<CustomerDto> findAllCustomers() {
 
         return customerService.findAllCustomers();
     }

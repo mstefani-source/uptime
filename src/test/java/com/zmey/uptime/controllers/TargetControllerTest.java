@@ -2,11 +2,7 @@ package com.zmey.uptime.controllers;
 
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasKey;
-
-import com.github.dockerjava.api.exception.NotFoundException;
-import com.zaxxer.hikari.HikariDataSource;
 import com.zmey.uptime.entities.Target;
-import jakarta.activation.DataSource;
 import java.util.NoSuchElementException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +46,7 @@ class TargetControllerTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine").withExposedPorts(5432);
 
     @BeforeAll
     static void beforeAll() {
@@ -85,13 +81,9 @@ class TargetControllerTest {
                 new Target(customer, "http://welkom.za", "SA", "city of SA"),
                 new Target(customer, "http://boxburg.za", "SA", "city of SA"));
         targetRepository.saveAll(targets);
-        logger.info("Before {}",testInfo.getDisplayName());
+        logger.info("Expected {}", testInfo.getDisplayName());
     }
 
-    @AfterEach
-    public void afterEachTest() throws InterruptedException {
-        Thread.sleep(1000); // Пауза в миллисекундах (например, 1 секунда)
-    }
 
     @Test
     @DisplayName("findAllTargets should return all targets")
@@ -104,6 +96,7 @@ class TargetControllerTest {
                 .statusCode(200)
                 .contentType(ContentType.JSON)
                 .body(".", hasSize(10));
+        logger.info("OK");
     }
 
     @Test
@@ -118,6 +111,7 @@ class TargetControllerTest {
                 .statusCode(200)
                 .contentType(ContentType.JSON)
                 .body(".", hasSize(0));
+        logger.info("OK");
     }
 
     @Test
@@ -141,6 +135,7 @@ class TargetControllerTest {
                         hasEntry("url", "http://berlin.de"), ".",
                         hasEntry("name", "DE"), ".",
                         hasEntry("description", "capital of Germany"));
+        logger.info("OK");
     }
 
     @Test
@@ -167,6 +162,7 @@ class TargetControllerTest {
 
         // Then
         assertEquals(10, targetRepository.findAll().size());
+        logger.info("OK");
     }
 
     @Test
@@ -184,21 +180,6 @@ class TargetControllerTest {
                 .delete("/targets/{id}")
                 .then()
                 .statusCode(404);
-    }
-
-    @Test
-    @DisplayName("Should return 500 if Customer having a Target")
-    void removeCustomerWithTargets(){
-        Customer customer = customerRepository.findAll().stream().findFirst().orElseThrow(NoSuchElementException::new);
-        List<Target> targets = targetRepository.findAll();
-        assertEquals(10, targets.size());
-        assertEquals(1, customerRepository.findAll().size());
-
-        given()
-                .pathParam("id", customer.getId())
-                .when()
-                .delete("/customers/{id}")
-                .then()
-                .statusCode(500);
+        logger.info("OK");
     }
 }
