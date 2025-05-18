@@ -1,12 +1,13 @@
 package com.zmey.uptime.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class CustomerDto {
+    private Long id;
     private String name;
 }

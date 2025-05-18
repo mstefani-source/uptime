@@ -1,31 +1,17 @@
 package com.zmey.uptime.controllers;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.zmey.uptime.dto.CreateTargetDto;
+import com.zmey.uptime.entities.Target;
+import com.zmey.uptime.services.TargetService;
+import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.zmey.uptime.dto.CreateTargetDto;
-import com.zmey.uptime.dto.ReadTargetDto;
-import com.zmey.uptime.entities.Target;
-import com.zmey.uptime.services.TargetService;
-
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/targets")
@@ -38,44 +24,28 @@ public class TargetController {
     @PostMapping()
     @ResponseBody
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Target createTarget(@RequestBody CreateTargetDto target) {
+    public CreateTargetDto createTarget(@RequestBody CreateTargetDto target) {
         return targetService.createTarget(target);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> removeTarget(@PathVariable Long id) {
-        Optional<Target> existTarget = targetService.findById(id);
 
-        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-        if (existTarget.isPresent()) {
-            targetService.deleteTarget(id);
-        } else {
-            response = ResponseEntity.notFound().build();
-        }
-
-        return response;
-
+        targetService.deleteTarget(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping()
-    public List<ReadTargetDto> findAllTargets() {
+    public List<CreateTargetDto> findAllTargets() {
 
-        List<Target> targets = targetService.findAll();
-        List<ReadTargetDto> result = targets.stream()
-            .map(element -> toDto(element))
-            .collect(Collectors.toList());
-
-        return result;
+        return targetService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReadTargetDto> findTargetById(@PathVariable Long id) {
+    public ResponseEntity<CreateTargetDto> findTargetById(@PathVariable Long id) {
 
         Target target = targetService.findById(id).orElseThrow(() -> new EntityNotFoundException("Target not found"));
-
         return new ResponseEntity<>(toDto(target), HttpStatus.OK);
-
     }
 
     @PutMapping("/{id}")
@@ -86,15 +56,13 @@ public class TargetController {
             existingTarget.setDescription(target.getDescription());
             existingTarget.setUrl(target.getUrl());
             logger.info("existingTarget: " + existingTarget);
-            return targetService.updateTarget(existingTarget);
+            return targetService.updateTarget(id, existingTarget);
         }).orElseThrow(() -> new EntityNotFoundException("Target not found"));
 
     }
 
-    // move to Service
-    private ReadTargetDto toDto(Target target) {
-        return new ReadTargetDto(target.getId(), target.getCustomer().getId(), target.getUrl(),
-        target.getDescription());
+    private CreateTargetDto toDto(Target target) {
+        return new CreateTargetDto(target.getCustomer().getId(), target.getUrl(), target.getName(), target.getDescription());
     }
 
 }
