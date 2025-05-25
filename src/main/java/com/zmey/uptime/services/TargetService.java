@@ -1,8 +1,9 @@
 package com.zmey.uptime.services;
 
-import com.zmey.uptime.dto.CreateTargetDto;
+import com.zmey.uptime.dto.TargetDto;
 import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.Target;
+import com.zmey.uptime.mappers.TargetMapper;
 import com.zmey.uptime.repositories.CustomerRepository;
 import com.zmey.uptime.repositories.TargetRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,19 +23,13 @@ public class TargetService {
     private TargetRepository targetRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private TargetMapper mapper;
 
-    public CreateTargetDto createTarget(CreateTargetDto targetDto) {
+    public TargetDto createTarget(TargetDto targetDto) {
 
-        Customer customer = customerRepository.findById(targetDto.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("Customer_id not exist"));
-        Target target = new Target();
-        target.setCustomer(customer);
-        target.setName(targetDto.getName());
-        target.setUrl(targetDto.getUrl());
-        target.setDescription(targetDto.getDescription());
-        
-        return toDto(targetRepository.save(target));
+        Target target = mapper.mapDtoToModel(targetDto);
+
+        return mapper.mapModelToDto(targetRepository.save(target));
     }
 
     public void deleteTarget(Long id) {
@@ -67,21 +62,15 @@ public class TargetService {
         return targetRepository.findByUrl(url);
     }
 
-    public List<CreateTargetDto> findAll() {
+    public List<TargetDto> findAll() {
 
         List<Target> targets = targetRepository.findAll();
 
-        List<CreateTargetDto> result = targets.stream()
-                .map(element -> toDto(element))
+        List<TargetDto> result = targets.stream()
+                .map(element -> mapper.mapModelToDto(element))
                 .collect(Collectors.toList());
 
         return result;
-    }
-
-
-    private CreateTargetDto toDto(Target target) {
-        return new CreateTargetDto(target.getCustomer().getId(), target.getUrl(), target.getName(),
-                target.getDescription());
     }
 
 }

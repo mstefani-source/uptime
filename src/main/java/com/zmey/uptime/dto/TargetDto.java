@@ -7,10 +7,11 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class CreateTargetDto {
+public class TargetDto {
 
     private Long customerId;
     private String url;
     private String name;
     private String description;
+    private Boolean active;
 }

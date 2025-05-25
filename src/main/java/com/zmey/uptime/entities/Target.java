@@ -49,17 +49,20 @@ public class Target implements BaseTarget {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    private Boolean active;
+
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Target(Customer customer, String url, String name, String description) {
+    public Target(Customer customer, String url, String name, String description, Boolean active) {
         this.customer = customer;
         this.url = url;
         this.name = name;
         this.description = description;
+        this.active = active;
     }
 
     @Override

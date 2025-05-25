@@ -62,16 +62,16 @@ class CustomerControllerTest {
         customerRepository.save(customer);
 
         List<Target> targets = List.of(
-                new Target(customer, "http://durban.za", "SA", "beautiful beaches of SA"),
-                new Target(customer, "http://pretoria.za", "SA", "second capital of SA"),
-                new Target(customer, "http://capetown.za", "SA", "third capital of SA"),
-                new Target(customer, "http://johannesburg.za", "SA", "first capital of SA"),
-                new Target(customer, "http://petermaritzburg.za", "SA", "city of SA"),
-                new Target(customer, "http://port-elizabet.za", "SA", "city of SA"),
-                new Target(customer, "http://benoni.za", "SA", "city of SA"),
-                new Target(customer, "http://soueto.za", "SA", "city of SA"),
-                new Target(customer, "http://welkom.za", "SA", "city of SA"),
-                new Target(customer, "http://boxburg.za", "SA", "city of SA"));
+                new Target(customer, "http://durban.za", "SA", "beautiful beaches of SA", true),
+                new Target(customer, "http://pretoria.za", "SA", "second capital of SA", true),
+                new Target(customer, "http://capetown.za", "SA", "third capital of SA", true),
+                new Target(customer, "http://johannesburg.za", "SA", "first capital of SA", true),
+                new Target(customer, "http://petermaritzburg.za", "SA", "city of SA", true),
+                new Target(customer, "http://port-elizabet.za", "SA", "city of SA", true),
+                new Target(customer, "http://benoni.za", "SA", "city of SA", true),
+                new Target(customer, "http://soueto.za", "SA", "city of SA", true),
+                new Target(customer, "http://welkom.za", "SA", "city of SA", true),
+                new Target(customer, "http://boxburg.za", "SA", "city of SA", true));
         targetRepository.saveAll(targets);
         logger.info("Expected {}", testInfo.getDisplayName());
     }

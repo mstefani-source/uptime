@@ -70,16 +70,16 @@ class TargetControllerTest {
         customerRepository.save(customer);
 
         List<Target> targets = List.of(
-                new Target(customer, "http://durban.za", "SA", "beauteful beaches of SA"),
-                new Target(customer, "http://pretoria.za", "SA", "second capital of SA"),
-                new Target(customer, "http://capetown.za", "SA", "third capital of SA"),
-                new Target(customer, "http://johannesburg.za", "SA", "first capital of SA"),
-                new Target(customer, "http://petermaritzburg.za", "SA", "city of SA"),
-                new Target(customer, "http://port-elizabet.za", "SA", "city of SA"),
-                new Target(customer, "http://benoni.za", "SA", "city of SA"),
-                new Target(customer, "http://soueto.za", "SA", "city of SA"),
-                new Target(customer, "http://welkom.za", "SA", "city of SA"),
-                new Target(customer, "http://boxburg.za", "SA", "city of SA"));
+                new Target(customer, "http://durban.za", "SA", "beauteful beaches of SA", true),
+                new Target(customer, "http://pretoria.za", "SA", "second capital of SA", true),
+                new Target(customer, "http://capetown.za", "SA", "third capital of SA", true),
+                new Target(customer, "http://johannesburg.za", "SA", "first capital of SA", true),
+                new Target(customer, "http://petermaritzburg.za", "SA", "city of SA", true),
+                new Target(customer, "http://port-elizabet.za", "SA", "city of SA", true),
+                new Target(customer, "http://benoni.za", "SA", "city of SA", true),
+                new Target(customer, "http://soueto.za", "SA", "city of SA", true),
+                new Target(customer, "http://welkom.za", "SA", "city of SA", true),
+                new Target(customer, "http://boxburg.za", "SA", "city of SA", true));
         targetRepository.saveAll(targets);
         logger.info("Expected {}", testInfo.getDisplayName());
     }
@@ -122,7 +122,8 @@ class TargetControllerTest {
                 	"customerId": 1,
                 	"url": "http://berlin.de",
                 	"name": "DE",
-                	"description": "capital of Germany"
+                	"description": "capital of Germany",
+                	"active": "true"
                 }
                 """;
 
@@ -134,7 +135,8 @@ class TargetControllerTest {
                         hasKey("customer"), ".",
                         hasEntry("url", "http://berlin.de"), ".",
                         hasEntry("name", "DE"), ".",
-                        hasEntry("description", "capital of Germany"));
+                        hasEntry("description", "capital of Germany"),".",
+                        hasEntry("active", true),".");
         logger.info("OK");
     }
 
@@ -148,7 +150,7 @@ class TargetControllerTest {
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
 
-        Target target = new Target(existingCustomer, "http://china.cn", "CN", "city of China");
+        Target target = new Target(existingCustomer, "http://china.cn", "CN", "city of China", true);
         Target savedTarget = targetRepository.save(target);
         assertEquals(11, targetRepository.findAll().size());
 

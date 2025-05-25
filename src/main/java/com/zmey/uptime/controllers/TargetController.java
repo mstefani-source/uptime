@@ -1,7 +1,8 @@
 package com.zmey.uptime.controllers;
 
-import com.zmey.uptime.dto.CreateTargetDto;
+import com.zmey.uptime.dto.TargetDto;
 import com.zmey.uptime.entities.Target;
+import com.zmey.uptime.mappers.TargetMapper;
 import com.zmey.uptime.services.TargetService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -21,10 +22,13 @@ public class TargetController {
     @Autowired
     private TargetService targetService;
 
+    @Autowired
+    private TargetMapper mapper;
+
     @PostMapping()
     @ResponseBody
     @ResponseStatus(code = HttpStatus.CREATED)
-    public CreateTargetDto createTarget(@RequestBody CreateTargetDto target) {
+    public TargetDto createTarget(@RequestBody TargetDto target) {
         return targetService.createTarget(target);
     }
 
@@ -36,16 +40,16 @@ public class TargetController {
     }
 
     @GetMapping()
-    public List<CreateTargetDto> findAllTargets() {
+    public List<TargetDto> findAllTargets() {
 
         return targetService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CreateTargetDto> findTargetById(@PathVariable Long id) {
+    public ResponseEntity<TargetDto> findTargetById(@PathVariable Long id) {
 
         Target target = targetService.findById(id).orElseThrow(() -> new EntityNotFoundException("Target not found"));
-        return new ResponseEntity<>(toDto(target), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.mapModelToDto(target), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -59,10 +63,6 @@ public class TargetController {
             return targetService.updateTarget(id, existingTarget);
         }).orElseThrow(() -> new EntityNotFoundException("Target not found"));
 
-    }
-
-    private CreateTargetDto toDto(Target target) {
-        return new CreateTargetDto(target.getCustomer().getId(), target.getUrl(), target.getName(), target.getDescription());
     }
 
 }
