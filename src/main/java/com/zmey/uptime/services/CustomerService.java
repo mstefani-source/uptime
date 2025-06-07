@@ -8,6 +8,7 @@ package com.zmey.uptime.services;
 
 import com.zmey.uptime.dto.CustomerDto;
 import com.zmey.uptime.entities.Customer;
+import com.zmey.uptime.mappers.CustomerMapper;
 import com.zmey.uptime.repositories.CustomerRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,15 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    CustomerMapper customerMapper;
+
     public CustomerDto createCustomer(CustomerDto customerDto) {
-        Customer customer = customerRepository
-                .findByName(customerDto.getName())
-                .orElse(new Customer());
-        if (customer.getName() == null) {
-            customer.setName(customerDto.getName());
-            return toDto(customerRepository.save(customer));
-        }
-        return customerDto;
+
+        Customer customer = customerMapper.mapDtoToModel(customerDto);
+        Customer savedCustomer = customerRepository.save(customer);
+
+        return customerMapper.mapModelToDto(savedCustomer);
     }
 
     public List<CustomerDto> findAllCustomers() {
@@ -39,7 +40,7 @@ public class CustomerService {
 
         return customers
                 .stream()
-                .map((customer) -> new CustomerDto(customer.getId(),customer.getName()))
+                .map((customer) -> customerMapper.mapModelToDto(customer))
                 .toList();
     }
 
@@ -56,11 +57,7 @@ public class CustomerService {
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Customer_id not exist"));
         customer.setName(customerDto.getName());
-        return toDto(customerRepository.save(customer));
-    }
+        return customerMapper.mapModelToDto(customerRepository.save(customer));
 
-
-    private CustomerDto toDto(Customer customer) {
-        return new CustomerDto(customer.getId(), customer.getName());
     }
 }

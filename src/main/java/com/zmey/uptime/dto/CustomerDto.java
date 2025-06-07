@@ -1,5 +1,6 @@
 package com.zmey.uptime.dto;
 
+import com.zmey.uptime.entities.enums.Role;
 import lombok.*;
 
 @Getter
@@ -10,4 +11,7 @@ import lombok.*;
 public class CustomerDto {
     private Long id;
     private String name;
+    private String email;
+    private String password;
+    private Role role = Role.ROLE_USER;
 }

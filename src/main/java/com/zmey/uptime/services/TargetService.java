@@ -28,8 +28,9 @@ public class TargetService {
     public TargetDto createTarget(TargetDto targetDto) {
 
         Target target = mapper.mapDtoToModel(targetDto);
+        Target savedTarget = targetRepository.save(target);
 
-        return mapper.mapModelToDto(targetRepository.save(target));
+        return mapper.mapModelToDto(savedTarget);
     }
 
     public void deleteTarget(Long id) {
