@@ -2,6 +2,7 @@ package com.zmey.uptime.controllers;
 
 import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.Target;
+import com.zmey.uptime.entities.enums.Role;
 import com.zmey.uptime.repositories.CustomerRepository;
 import com.zmey.uptime.repositories.TargetRepository;
 import io.restassured.RestAssured;
@@ -59,6 +60,9 @@ class CustomerControllerTest {
 
         Customer customer = new Customer();
         customer.setName("Ivanov");
+        customer.setEmail("test@gmail.com");
+        customer.setPassword("password");
+
         customerRepository.save(customer);
 
         List<Target> targets = List.of(
@@ -89,7 +93,10 @@ class CustomerControllerTest {
 
         String payload = """
                 {
-                	"name": "Petrov"
+                	"name": "Petrov",
+                	"email": "test@ya.ru",
+                	"password": "pw",
+                	"role": "ROLE_ADMIN"
                 }
                 """;
 

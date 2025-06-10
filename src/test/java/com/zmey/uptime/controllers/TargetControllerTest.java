@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasKey;
 import com.zmey.uptime.entities.Target;
 import java.util.NoSuchElementException;
+
+import com.zmey.uptime.entities.enums.Role;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
@@ -67,6 +69,8 @@ class TargetControllerTest {
         customerRepository.deleteAll();
         Customer customer = new Customer();
         customer.setName("Ivanov");
+        customer.setEmail("test@gmail.com");
+        customer.setPassword("password");
         customerRepository.save(customer);
 
         List<Target> targets = List.of(
