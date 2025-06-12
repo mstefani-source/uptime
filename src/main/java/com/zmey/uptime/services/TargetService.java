@@ -1,10 +1,8 @@
 package com.zmey.uptime.services;
 
 import com.zmey.uptime.dto.TargetDto;
-import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.mappers.TargetMapper;
-import com.zmey.uptime.repositories.CustomerRepository;
 import com.zmey.uptime.repositories.TargetRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.log4j.Log4j2;

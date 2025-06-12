@@ -1,7 +1,9 @@
 package com.zmey.uptime.auth;
 
+import com.zmey.uptime.services.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,12 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/login")
 @Tag(name = "Аутентификация")
 public class LoginController {
-    private final UserService service;
+
+    @Autowired
+    private CustomerService service;
+
+//    public LoginController(CustomerService service) {
+//        this.service = service;
+//    }
 
     @GetMapping
     @Operation(summary = "Доступен только авторизованным пользователям")
     public String example() {
-        return "Hello, world!";
+        return "Hello, world!!";
     }
 
     @GetMapping("/admin")
@@ -26,9 +34,9 @@ public class LoginController {
         return "Hello, admin!";
     }
 
-    @GetMapping("/get-admin")
-    @Operation(summary = "Получить роль ADMIN (для демонстрации)")
-    public void getAdmin() {
-        service.getAdmin();
-    }
+//    @GetMapping("/get-admin")
+//    @Operation(summary = "Получить роль ADMIN (для демонстрации)")
+//    public void getAdmin() {
+//        service.getAdmin();
+//    }
 }
