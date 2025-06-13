@@ -4,10 +4,9 @@ import com.zmey.uptime.services.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
@@ -17,14 +16,15 @@ public class LoginController {
     @Autowired
     private CustomerService service;
 
-//    public LoginController(CustomerService service) {
-//        this.service = service;
-//    }
-
     @GetMapping
     @Operation(summary = "Доступен только авторизованным пользователям")
     public String example() {
         return "Hello, world!!";
+    }
+
+    @PostMapping
+    public ResponseEntity<String> login(@RequestBody LoginRequest request){
+        return ResponseEntity.ok("Login ok (check cookies)");
     }
 
     @GetMapping("/admin")

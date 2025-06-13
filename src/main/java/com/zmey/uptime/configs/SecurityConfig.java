@@ -2,8 +2,10 @@ package com.zmey.uptime.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
     @Bean
@@ -32,7 +34,7 @@ public class SecurityConfig {
         UserDetails user2 = User.builder()
                 .username("u2")
                 .password("p2")
-                .roles("USER")
+                .roles("ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(user1, user2);
@@ -42,11 +44,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/customers").hasRole("ADMIN")
+                        .requestMatchers("/targets").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .httpBasic(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .defaultSuccessUrl("/targets")
+                        .permitAll()
+                )
+                .logout( logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login&logout")
                         .permitAll()
                 );
         return http.build();
