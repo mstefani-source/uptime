@@ -28,7 +28,7 @@ public class CustomerDto implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.name;
+        return email;
     }
 
     @Override
