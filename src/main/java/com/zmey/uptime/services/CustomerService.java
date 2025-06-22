@@ -12,6 +12,8 @@ import com.zmey.uptime.mappers.CustomerMapper;
 import com.zmey.uptime.repositories.CustomerRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,8 +46,8 @@ public class CustomerService {
                 .toList();
     }
 
-    public Optional<Customer> findById(Long id) {
-        return customerRepository.findById(id);
+    public Optional<CustomerDto> findById(Long id) {
+        return Optional.of(customerMapper.mapModelToDto(customerRepository.findById(id).orElseThrow()));
     }
 
     public void deleteTarget(Long id) {
@@ -58,6 +60,19 @@ public class CustomerService {
                 .orElseThrow(() -> new IllegalArgumentException("Customer_id not exist"));
         customer.setName(customerDto.getName());
         return customerMapper.mapModelToDto(customerRepository.save(customer));
+    }
 
+    public CustomerDto findByEmail(String email) {
+        return customerMapper.mapModelToDto(customerRepository.findByEmail(email).orElseThrow());
+    }
+
+    public CustomerDto getCurrentUser() {
+        // Получение имени пользователя из контекста Spring Security
+        var email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return findByEmail(email);
+    }
+
+    public UserDetailsService userDetailsService() {
+        return this::findByEmail;
     }
 }

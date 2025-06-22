@@ -1,5 +1,6 @@
 package com.zmey.uptime.services;
 
+import com.zmey.uptime.dto.CustomerDto;
 import com.zmey.uptime.entities.Customer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -103,7 +104,7 @@ public class JwtService {
      */
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        if (userDetails instanceof Customer customer) {
+        if (userDetails instanceof CustomerDto customer) {
             claims.put("id", customer.getId());
             claims.put("email", customer.getEmail());
             claims.put("role", customer.getRole());

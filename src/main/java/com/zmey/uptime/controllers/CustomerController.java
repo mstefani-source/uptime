@@ -30,13 +30,14 @@ public class CustomerController {
 
     @GetMapping()
     public List<CustomerDto> findAllCustomers() {
+        log.info("find All Customers");
         return customerService.findAllCustomers();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> removeCustomer(@PathVariable Long id) {
 
-        Optional<Customer> existTarget = customerService.findById(id);
+        Optional<CustomerDto> existTarget = customerService.findById(id);
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         if (existTarget.isPresent()) {

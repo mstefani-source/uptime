@@ -21,10 +21,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return customerMapper.mapModelToDto(customerRepository
+
+        UserDetails customer = customerMapper.mapModelToDto(customerRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("no user with login %s is registered", email)
                 )));
+
+        return customer;
     }
 }
