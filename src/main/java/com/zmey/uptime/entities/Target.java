@@ -95,18 +95,4 @@ public class Target implements BaseTarget {
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         return result;
     }
-
-    // @Override
-    // public String toString() {
-    //     return "{" 
-    //             + "id=" + id 
-    //             + ", customer=" + customer.toString() 
-    //             + ", url=" + url 
-    //             + ", name=" + name
-    //             + ", description=" + description 
-    //             + ", updatedAt=" + updatedAt 
-    //             + ", createdAt=" + createdAt
-    //             + "}";
-    // }
-
 }

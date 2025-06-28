@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -63,7 +64,7 @@ public class CustomerService {
     }
 
     public CustomerDto findByEmail(String email) {
-        return customerMapper.mapModelToDto(customerRepository.findByEmail(email).orElseThrow());
+        return customerMapper.mapModelToDto(customerRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("No such customer")));
     }
 
     public CustomerDto getCurrentUser() {

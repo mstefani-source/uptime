@@ -1,13 +1,19 @@
 package com.zmey.uptime.services;
 
+import com.zmey.uptime.dto.CustomerDto;
 import com.zmey.uptime.dto.TargetDto;
 import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.mappers.TargetMapper;
 import com.zmey.uptime.repositories.TargetRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,12 +24,26 @@ import java.util.stream.Collectors;
 public class TargetService {
 
     @Autowired
+    private JwtService jwtService;
+
+    @Autowired
     private TargetRepository targetRepository;
 
     @Autowired
     private TargetMapper mapper;
 
     public TargetDto createTarget(TargetDto targetDto) {
+
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                        .getRequest();
+        String authHeader = request.getHeader("Authorization");
+
+        String jwtToken = authHeader != null && authHeader.startsWith("Bearer ")
+                ? authHeader.substring(7)
+                : null;
+
+        targetDto.setCustomerId(jwtService.extractCustomerId(jwtToken));
 
         Target target = mapper.mapDtoToModel(targetDto);
         Target savedTarget = targetRepository.save(target);
@@ -47,7 +67,6 @@ public class TargetService {
                     existingTarget.setCustomer(target.getCustomer());
                     existingTarget.setDescription(target.getDescription());
                     existingTarget.setUrl(target.getUrl());
-                    log.info("existingTarget: " + existingTarget);
                     return targetRepository.save(existingTarget);
                 }).orElseThrow(() -> new EntityNotFoundException("Target not found"));
 
@@ -63,13 +82,30 @@ public class TargetService {
 
     public List<TargetDto> findAll() {
 
-        List<Target> targets = targetRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomerDto customerDto = (CustomerDto)authentication.getPrincipal();
+
+        log.info("!!!!!!!!!!!!!!!!!!!!!!!" + customerDto);
+
+        List<Target> targets = targetRepository.findAllByCustomerId(customerDto.getId());
 
         List<TargetDto> result = targets.stream()
                 .map(element -> mapper.mapModelToDto(element))
                 .collect(Collectors.toList());
 
         return result;
+    }
+
+    private String getJwtTokenFromContext() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+//        return (auth instanceof JwtAuthenticationToken)
+//                ? ((JwtAuthenticationToken) auth).getToken().getTokenValue()
+//                : null;
+
+        return (auth != null && auth.getCredentials() instanceof String)
+                ? (String) auth.getCredentials()
+                : null;
     }
 
 }

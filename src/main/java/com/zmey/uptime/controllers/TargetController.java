@@ -3,6 +3,8 @@ package com.zmey.uptime.controllers;
 import com.zmey.uptime.dto.TargetDto;
 import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.mappers.TargetMapper;
+import com.zmey.uptime.services.AuthenticationService;
+import com.zmey.uptime.services.JwtService;
 import com.zmey.uptime.services.TargetService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +25,9 @@ public class TargetController {
 
     @Autowired
     private TargetService targetService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Autowired
     private TargetMapper mapper;
