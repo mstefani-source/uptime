@@ -1,5 +1,6 @@
 package com.zmey.uptime.auth;
 
+import com.zmey.uptime.dto.CustomerDto;
 import com.zmey.uptime.services.CustomerService;
 import com.zmey.uptime.services.JwtService;
 import jakarta.servlet.FilterChain;
@@ -9,9 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -43,26 +45,56 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Обрезаем префикс и получаем имя пользователя из токена
         var jwt = authHeader.substring(BEARER_PREFIX.length());
+        var customerId = jwtService.extractCustomerId(jwt);
         var username = jwtService.extractCustomerName(jwt);
+        var email = jwtService.extractEmail(jwt);
+        var role = jwtService.extractRoles(jwt);
 
-        if (!StringUtils.isEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = customerService.findByEmail(username);
+        //** my commit */
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-            // Если токен валиден, то аутентифицируем пользователя
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+//    private Long id;
+//    private String name;
+//    private String email;
+//    private String password;
+//    private Role role = Role.ROLE_USER;
 
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                context.setAuthentication(authToken);
-                SecurityContextHolder.setContext(context);
-            }
-        }
+        UserDetails userDetails = new CustomerDto(customerId, username, email, role);
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+        context.setAuthentication(authToken);
+        SecurityContextHolder.setContext(context);
+
+
+        //** end my commit  */
+
+
+//        if (!StringUtils.isEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
+//            UserDetails userDetails = customerService.findByEmail(username);
+//
+//            // Если токен валиден, то аутентифицируем пользователя
+//            if (jwtService.isTokenValid(jwt, userDetails)) {
+//                SecurityContext context = SecurityContextHolder.createEmptyContext();
+//
+//                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+//                        userDetails,
+//                        null,
+//                        userDetails.getAuthorities()
+//                );
+//
+//                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                context.setAuthentication(authToken);
+//                SecurityContextHolder.setContext(context);
+//            }
+//        }
         filterChain.doFilter(request, response);
     }
 

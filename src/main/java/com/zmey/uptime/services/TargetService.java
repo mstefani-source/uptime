@@ -83,10 +83,8 @@ public class TargetService {
     public List<TargetDto> findAll() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         CustomerDto customerDto = (CustomerDto)authentication.getPrincipal();
-
-        log.info("!!!!!!!!!!!!!!!!!!!!!!!" + customerDto);
-
         List<Target> targets = targetRepository.findAllByCustomerId(customerDto.getId());
 
         List<TargetDto> result = targets.stream()
@@ -98,10 +96,6 @@ public class TargetService {
 
     private String getJwtTokenFromContext() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-//        return (auth instanceof JwtAuthenticationToken)
-//                ? ((JwtAuthenticationToken) auth).getToken().getTokenValue()
-//                : null;
 
         return (auth != null && auth.getCredentials() instanceof String)
                 ? (String) auth.getCredentials()

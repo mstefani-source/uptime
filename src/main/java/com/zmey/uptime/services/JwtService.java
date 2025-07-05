@@ -2,6 +2,7 @@ package com.zmey.uptime.services;
 
 import com.zmey.uptime.dto.CustomerDto;
 import com.zmey.uptime.entities.Customer;
+import com.zmey.uptime.entities.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -39,7 +40,17 @@ public class JwtService {
 
     }
 
+    public String extractEmail(String token) {
+        Claims claims = extractAllClaims(token);
+        String email = (String) claims.get("email");
+        return email;
+    }
 
+    public Role extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        String role = (String) claims.get("role");
+        return Role.valueOf(role);
+    }
 
     /**
      * Проверка токена на валидность
@@ -144,5 +155,6 @@ public class JwtService {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
 }

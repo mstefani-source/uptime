@@ -2,8 +2,6 @@ package com.zmey.uptime.services;
 
 import com.zmey.uptime.mappers.CustomerMapper;
 import com.zmey.uptime.repositories.CustomerRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
