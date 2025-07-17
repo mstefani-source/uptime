@@ -1,0 +1,4 @@
+CREATE USER postgres WITH PASSWORD 'password';
+CREATE DATABASE postgres;
+GRANT CONNECT ON DATABASE postgres TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE postgres to postgres;

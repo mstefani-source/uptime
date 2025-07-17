@@ -52,14 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         //** my commit */
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-
-
-//    private Long id;
-//    private String name;
-//    private String email;
-//    private String password;
-//    private Role role = Role.ROLE_USER;
-
         UserDetails userDetails = new CustomerDto(customerId, username, email, role);
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -69,7 +61,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         );
 
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
         context.setAuthentication(authToken);
         SecurityContextHolder.setContext(context);
 

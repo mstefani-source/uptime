@@ -19,6 +19,9 @@ services:
     environment:
       POSTGRES_USER: uptime
       POSTGRES_PASSWORD: uptime
+    volumes:
+  #    - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./volumes/postgres:/var/lib/postgresql/data
 
   adminer:
     image: adminer
