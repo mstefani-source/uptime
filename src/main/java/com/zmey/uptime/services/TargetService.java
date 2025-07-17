@@ -3,6 +3,7 @@ package com.zmey.uptime.services;
 import com.zmey.uptime.dto.CustomerDto;
 import com.zmey.uptime.dto.TargetDto;
 import com.zmey.uptime.entities.Target;
+import com.zmey.uptime.jobs.PingJob;
 import com.zmey.uptime.mappers.TargetMapper;
 import com.zmey.uptime.repositories.TargetRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +33,9 @@ public class TargetService {
     @Autowired
     private TargetMapper mapper;
 
+    @Autowired
+    private PingJob pingJob;
+
     public TargetDto createTarget(TargetDto targetDto) {
 
         HttpServletRequest request =
@@ -47,7 +51,7 @@ public class TargetService {
 
         Target target = mapper.mapDtoToModel(targetDto);
         Target savedTarget = targetRepository.save(target);
-
+        pingJob.start();
         return mapper.mapModelToDto(savedTarget);
     }
 
