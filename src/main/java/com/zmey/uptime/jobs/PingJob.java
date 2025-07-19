@@ -62,8 +62,9 @@ public class PingJob extends QuartzJobBean {
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         Trigger trigger = context.getTrigger();
         Date nextFireTime = trigger.getNextFireTime();
-        log.info("Next execution: {}", nextFireTime);
-        log.info("PingJob executed");
+        log.info("PingJob executed with context " + context);
+
+
     }
 }
 
