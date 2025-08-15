@@ -1,4 +1,4 @@
-CREATE USER postgres WITH PASSWORD 'password';
-CREATE DATABASE postgres;
-GRANT CONNECT ON DATABASE postgres TO postgres;
-GRANT ALL PRIVILEGES ON DATABASE postgres to postgres;
+CREATE USER uptime WITH PASSWORD 'uptime';
+CREATE DATABASE uptime;
+GRANT CONNECT ON DATABASE uptime TO uptime;
+GRANT ALL PRIVILEGES ON DATABASE uptime to uptime;

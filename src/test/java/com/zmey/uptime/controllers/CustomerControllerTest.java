@@ -2,7 +2,6 @@ package com.zmey.uptime.controllers;
 
 import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.Target;
-import com.zmey.uptime.entities.enums.Role;
 import com.zmey.uptime.repositories.CustomerRepository;
 import com.zmey.uptime.repositories.TargetRepository;
 import io.restassured.RestAssured;

@@ -3,8 +3,10 @@ package com.zmey.uptime.services;
 import com.zmey.uptime.dto.CustomerDto;
 import com.zmey.uptime.dto.TargetDto;
 import com.zmey.uptime.entities.Target;
-import com.zmey.uptime.jobs.PingJob;
 import com.zmey.uptime.mappers.TargetMapper;
+import com.zmey.uptime.mappers.TargetToJob;
+import com.zmey.uptime.quartz.jobs.PingJob;
+import com.zmey.uptime.quartz.shedulers.JobSheduler;
 import com.zmey.uptime.repositories.TargetRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,26 +36,33 @@ public class TargetService {
     private TargetMapper mapper;
 
     @Autowired
-    private PingJob pingJob;
+    private JobSheduler jobSheduler;
 
     public TargetDto createTarget(TargetDto targetDto) {
 
-        HttpServletRequest request =
-                ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                        .getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest();
         String authHeader = request.getHeader("Authorization");
 
         String jwtToken = authHeader != null && authHeader.startsWith("Bearer ")
                 ? authHeader.substring(7)
                 : null;
 
-        targetDto.setCustomerId(jwtService.extractCustomerId(jwtToken));
+        TargetDto targetDto2 = targetDto;
+
+        
+        targetDto2.setCustomerId(jwtService.extractCustomerId(jwtToken));
 
         Target target = mapper.mapDtoToModel(targetDto);
         Target savedTarget = targetRepository.save(target);
-        pingJob.start();
+
+      
+
+        jobSheduler.scheduleJob(savedTarget);
         return mapper.mapModelToDto(savedTarget);
     }
+
+
 
     public void deleteTarget(Long id) {
 
@@ -88,7 +97,7 @@ public class TargetService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        CustomerDto customerDto = (CustomerDto)authentication.getPrincipal();
+        CustomerDto customerDto = (CustomerDto) authentication.getPrincipal();
         List<Target> targets = targetRepository.findAllByCustomerId(customerDto.getId());
 
         List<TargetDto> result = targets.stream()

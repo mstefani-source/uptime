@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.zmey.uptime.entities.enums.Protocol;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,6 +47,8 @@ public class Target implements BaseTarget {
     private String url;
 
     private String name;
+
+    private Protocol protocol;
 
     @Column(columnDefinition = "TEXT")
     private String description;

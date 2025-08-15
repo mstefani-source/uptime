@@ -20,6 +20,7 @@ public class CustomerDto implements UserDetails {
     private String name;
     private String email;
     private String password;
+    @Builder.Default
     private Role role = Role.ROLE_USER;
 
     public CustomerDto(Long customerId, String username, String email, Role role) {

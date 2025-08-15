@@ -7,7 +7,6 @@ import com.zmey.uptime.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Currency;
 
 @Component
 public class TargetMapper {
