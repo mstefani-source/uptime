@@ -50,13 +50,11 @@ public class TargetService {
 
         TargetDto targetDto2 = targetDto;
 
-        
+
         targetDto2.setCustomerId(jwtService.extractCustomerId(jwtToken));
 
         Target target = mapper.mapDtoToModel(targetDto);
         Target savedTarget = targetRepository.save(target);
-
-      
 
         jobSheduler.scheduleJob(savedTarget);
         return mapper.mapModelToDto(savedTarget);

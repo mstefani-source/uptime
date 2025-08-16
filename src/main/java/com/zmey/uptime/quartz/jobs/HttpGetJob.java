@@ -6,9 +6,12 @@ import org.quartz.JobExecutionContext;
 import org.springframework.lang.NonNull;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.stereotype.Component;
+
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@Component
 public class HttpGetJob extends QuartzJobBean {
     @Override
     protected void executeInternal(@NonNull JobExecutionContext context) throws JobExecutionException {

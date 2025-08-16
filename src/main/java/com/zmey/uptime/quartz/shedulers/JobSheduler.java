@@ -1,5 +1,6 @@
 package com.zmey.uptime.quartz.shedulers;
 
+import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.ObjectAlreadyExistsException;
@@ -9,6 +10,7 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +26,15 @@ public class JobSheduler {
     @Autowired
     private SchedulerFactoryBean schedulerFactory;
 
-    @Autowired JobFactory jobFactory;
+    @Autowired
+    JobFactory jobFactory;
 
     public void scheduleJob(Target savedTarget) {
         try {
             Scheduler scheduler = schedulerFactory.getScheduler();
             scheduler.start();
 
-            JobDetail job = buildJobDetail();
+            JobDetail job = buildJobDetail(PingJob.class);
             Trigger trigger = buildJobTrigger(job);
 
             scheduler.scheduleJob(job, trigger);
@@ -45,9 +48,9 @@ public class JobSheduler {
         }
     }
 
-    private JobDetail buildJobDetail() {
+    private <T> JobDetail buildJobDetail(final Class<T> jobClass) {
         return JobBuilder.newJob(PingJob.class)
-                .withIdentity("pingJob", "monitoringGroup")
+                .withIdentity(jobClass.getSimpleName(), "monitoringGroup")
                 .storeDurably()
                 .requestRecovery()
                 .build();
