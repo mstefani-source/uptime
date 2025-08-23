@@ -32,8 +32,8 @@ public class JobSheduler {
         try {
             Scheduler scheduler = schedulerFactory.getScheduler();
             scheduler.start();
-
-            JobDetail job = buildJobDetail(PingJob.class);
+  
+            JobDetail job = buildJobDetail(jobFactory.getJobClass(savedTarget));
             Trigger trigger = buildJobTrigger(job);
 
             scheduler.scheduleJob(job, trigger);
@@ -47,8 +47,8 @@ public class JobSheduler {
         }
     }
 
-    private <T> JobDetail buildJobDetail(final Class<T> jobClass) {
-        return JobBuilder.newJob(PingJob.class)
+    private JobDetail buildJobDetail(Class<? extends Job> jobClass) {
+        return JobBuilder.newJob(jobClass)
                 .withIdentity(jobClass.getSimpleName(), "monitoringGroup")
                 .storeDurably()
                 .requestRecovery()
