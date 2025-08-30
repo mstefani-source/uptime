@@ -5,8 +5,10 @@ import com.zmey.uptime.dto.TargetDto;
 import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.mappers.TargetMapper;
 import com.zmey.uptime.mappers.TargetToJob;
+import com.zmey.uptime.quartz.JobManager;
+import com.zmey.uptime.quartz.SchedulerManager;
 import com.zmey.uptime.quartz.jobs.PingJob;
-import com.zmey.uptime.quartz.shedulers.JobSheduler;
+
 import com.zmey.uptime.repositories.TargetRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,8 +37,11 @@ public class TargetService {
     @Autowired
     private TargetMapper mapper;
 
+    // @Autowired
+    // private SchedulerManager jobSheduler;
+
     @Autowired
-    private JobSheduler jobSheduler;
+    private JobManager jobManager;
 
     public TargetDto createTarget(TargetDto targetDto) {
 
@@ -56,7 +61,7 @@ public class TargetService {
         Target target = mapper.mapDtoToModel(targetDto);
         Target savedTarget = targetRepository.save(target);
 
-        jobSheduler.scheduleJob(savedTarget);
+        jobManager.scheduleJob(savedTarget);
         return mapper.mapModelToDto(savedTarget);
     }
 
@@ -68,6 +73,7 @@ public class TargetService {
 
         if (existTarget.isPresent()) {
             targetRepository.deleteById(id);
+            // jobManager.
         }
     }
 

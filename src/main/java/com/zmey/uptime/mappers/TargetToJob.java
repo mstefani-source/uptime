@@ -7,7 +7,8 @@ public class TargetToJob {
 
     JobDto convert(TargetDto targetDto){
         JobDto jobDto = new JobDto();
-
+        jobDto.setName(targetDto.getName());
+        jobDto.setGroup(targetDto.getCustomerId().toString());
         jobDto.setDestination(targetDto.getUrl());
         jobDto.setType(targetDto.getProtocol());
         jobDto.setFrequency(targetDto.getFrequency());
