@@ -13,13 +13,12 @@ import lombok.extern.log4j.Log4j2;
 @Component
 @Log4j2
 public class SchedulerManager {
+
+    private final Scheduler scheduler;
+
     @Autowired
-    private SchedulerFactoryBean schedulerFactory;
-
-    private Scheduler scheduler = schedulerFactory.getScheduler();
-
-
-    public SchedulerManager() {
+    public SchedulerManager(SchedulerFactoryBean schedulerFactory) {
+        this.scheduler = schedulerFactory.getScheduler();
         try {
             scheduler.start();
         } catch (SchedulerException e) {
@@ -28,7 +27,7 @@ public class SchedulerManager {
         }
     }
 
-    public void shutdownSheduler(){
+    public void shutdownSheduler() {
         try {
             scheduler.shutdown();
         } catch (SchedulerException e) {
@@ -47,7 +46,7 @@ public class SchedulerManager {
     }
 
     public boolean stopJob(String jobName, String jobGroup) {
-        
+
         return false;
     }
 }

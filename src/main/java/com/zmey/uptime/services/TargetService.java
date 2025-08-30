@@ -73,7 +73,6 @@ public class TargetService {
 
         if (existTarget.isPresent()) {
             targetRepository.deleteById(id);
-            // jobManager.
         }
     }
 
