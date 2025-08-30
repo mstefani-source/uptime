@@ -18,25 +18,23 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class ProtocolHandlerValidator {
 
-    
     Collection<ProtocolHandler> protocolHandlers;
-
-    public ProtocolHandlerValidator(Collection<ProtocolHandler> protocolHandlers) {
-        this.protocolHandlers = protocolHandlers;
-    }
-
     private final Map<Protocol, Class<? extends Job>> jobClassMap;
 
-    {
+    @Autowired
+    public ProtocolHandlerValidator(Collection<ProtocolHandler> protocolHandlers) {
+        this.protocolHandlers = protocolHandlers;
         jobClassMap = protocolHandlers.stream()
                 .collect(Collectors.toMap(
                         ProtocolHandler::getProtocol,
                         ProtocolHandler::getProtocolClass));
 
         for (Protocol protocol : Protocol.values()) {
+            log.info("---------> " + jobClassMap.get(protocol));
             if (jobClassMap.get(protocol) == null)
-                new NotImplementedException("No Handler for protocol " + protocol);
+               throw new NotImplementedException("No Handler for protocol " + protocol);
         }
+
     }
 
 }

@@ -17,7 +17,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UptimeJobFactory {
 
-    Collection<ProtocolHandler> protocolHandlers = null;
+    Collection<ProtocolHandler> protocolHandlers;
 
     private final Map<Protocol, Class<? extends Job>> jobClassMap;
 
