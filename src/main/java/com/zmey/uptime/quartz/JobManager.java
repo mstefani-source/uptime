@@ -4,10 +4,13 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
 import com.zmey.uptime.entities.Target;
@@ -20,27 +23,47 @@ public class JobManager {
     @Autowired
     UptimeJobFactory jobFactory;
 
-    @Autowired
-    SchedulerManager scheduler;
+    // @Autowired
+    // SchedulerManager scheduler;
+    private final Scheduler scheduler;
+
+    public JobManager(SchedulerFactoryBean schedulerFactory) {
+        this.scheduler = schedulerFactory.getScheduler();
+    }
 
     public void scheduleJob(Target savedTarget) {
         JobDetail jobDetail = buildJobDetail(jobFactory.getJobClass(savedTarget));
         Trigger trigger = buildJobTrigger(jobDetail);
-        scheduler.scheduleJob(jobDetail, trigger);
+        try {
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (SchedulerException e) {
+            log.info("error while runing job %s", jobDetail.getDescription());
+        }
+
     }
 
     public void removeJob() {
-        scheduler.stopJob(null, null);
+        try {
+            scheduler.deleteJob(null);
+            // scheduler.scheduleJob(jobDetail, trigger);
+        } catch (SchedulerException e) {
+            log.info("error while runing job %s", jobDetail.getDescription());
+        }
     }
 
     public void pauseJob() {
-        // scheduler.pauseJob(null, null);
+        try {
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (SchedulerException e) {
+            log.info("error while runing job %s", jobDetail.getDescription());
+        }
         throw new NotImplementedException("not implemented yet");
     }
 
     private JobDetail buildJobDetail(Class<? extends Job> jobClass) {
         return JobBuilder.newJob(jobClass)
                 .withIdentity(jobClass.getSimpleName(), "monitoringGroup")
+                .withDescription(jobClass.getSimpleName())
                 .storeDurably()
                 .requestRecovery()
                 .build();
@@ -49,7 +72,7 @@ public class JobManager {
     private Trigger buildJobTrigger(JobDetail job) {
         log.error("job key = " + job.getKey());
         return TriggerBuilder.newTrigger()
-                .withIdentity("pingTrigger", "monitoringGroup")
+                .withIdentity(job.getDescription(), "monitoringGroup")
                 .forJob(job)
                 .startNow()
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule()

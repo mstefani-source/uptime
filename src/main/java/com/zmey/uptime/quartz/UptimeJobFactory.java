@@ -4,9 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.quartz.Job;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.entities.enums.Protocol;
