@@ -8,6 +8,7 @@ import org.quartz.Job;
 import org.springframework.stereotype.Component;
 import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.entities.enums.Protocol;
+import org.springframework.stereotype.Component;
 import com.zmey.uptime.entities.enums.ProtocolHandler;
 import lombok.extern.log4j.Log4j2;
 
