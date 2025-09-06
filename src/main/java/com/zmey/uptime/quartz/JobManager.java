@@ -4,6 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleScheduleBuilder;
@@ -23,16 +24,15 @@ public class JobManager {
     @Autowired
     UptimeJobFactory jobFactory;
 
-    // @Autowired
-    // SchedulerManager scheduler;
     private final Scheduler scheduler;
 
     public JobManager(SchedulerFactoryBean schedulerFactory) {
         this.scheduler = schedulerFactory.getScheduler();
     }
 
-    public void scheduleJob(Target savedTarget) {
-        JobDetail jobDetail = buildJobDetail(jobFactory.getJobClass(savedTarget));
+    public void scheduleJob(JobKey jobKey) {
+
+        JobDetail jobDetail = buildJobDetail(jobFactory.getJobClass(jobKey));
         Trigger trigger = buildJobTrigger(jobDetail);
         try {
             scheduler.scheduleJob(jobDetail, trigger);
@@ -42,20 +42,19 @@ public class JobManager {
 
     }
 
-    public void removeJob() {
+    public void removeJob(JobKey jobKey) {
         try {
-            scheduler.deleteJob(null);
-            // scheduler.scheduleJob(jobDetail, trigger);
+            scheduler.deleteJob(jobKey);
         } catch (SchedulerException e) {
-            log.info("error while runing job %s", jobDetail.getDescription());
+            log.info("error while runing job %s", jobKey.getName());
         }
     }
 
-    public void pauseJob() {
+    public void pauseJob(JobKey jobKey) {
         try {
-            scheduler.scheduleJob(jobDetail, trigger);
+            scheduler.pauseJob(jobKey); // scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
-            log.info("error while runing job %s", jobDetail.getDescription());
+            log.info("error while runing job %s", jobKey.getName());
         }
         throw new NotImplementedException("not implemented yet");
     }

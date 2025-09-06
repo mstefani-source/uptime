@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.quartz.Job;
+import org.quartz.JobKey;
 import org.springframework.stereotype.Component;
-import com.zmey.uptime.entities.Target;
 import com.zmey.uptime.entities.enums.Protocol;
 import org.springframework.stereotype.Component;
 import com.zmey.uptime.entities.enums.ProtocolHandler;
@@ -28,9 +28,9 @@ public class UptimeJobFactory {
                         ProtocolHandler::getProtocolClass));
     }
 
-    public Class<? extends Job> getJobClass(Target savedTarget) {
+    public Class<? extends Job> getJobClass(JobKey jobKey) {
 
-        return jobClassMap.get(savedTarget.getProtocol());
+        return jobClassMap.get(Protocol.valueOf(jobKey.getGroup()));
 
     }
 }
