@@ -30,8 +30,9 @@ public class JobManager {
         this.scheduler = schedulerFactory.getScheduler();
     }
 
-    public void scheduleJob(Target savedTarget) {
-        JobDetail jobDetail = buildJobDetail(jobFactory.getJobClass(savedTarget));
+    public void scheduleJob(JobKey jobKey) {
+
+        JobDetail jobDetail = buildJobDetail(jobFactory.getJobClass(jobKey));
         Trigger trigger = buildJobTrigger(jobDetail);
         try {
             scheduler.scheduleJob(jobDetail, trigger);

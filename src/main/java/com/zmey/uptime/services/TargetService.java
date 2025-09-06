@@ -13,6 +13,9 @@ import com.zmey.uptime.repositories.TargetRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
+
+import org.quartz.Job;
+import org.quartz.JobKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,8 +31,8 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TargetService {
 
-    @Autowired
-    private JwtService jwtService;
+    // @Autowired
+    // private JwtService jwtService;
 
     @Autowired
     private TargetRepository targetRepository;
@@ -45,23 +48,25 @@ public class TargetService {
 
     public TargetDto createTarget(TargetDto targetDto) {
 
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                .getRequest();
-        String authHeader = request.getHeader("Authorization");
+        // HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+        //         .getRequest();
+        // String authHeader = request.getHeader("Authorization");
 
-        String jwtToken = authHeader != null && authHeader.startsWith("Bearer ")
-                ? authHeader.substring(7)
-                : null;
+        // String jwtToken = authHeader != null && authHeader.startsWith("Bearer ")
+        //         ? authHeader.substring(7)
+        //         : null;
 
-        TargetDto targetDto2 = targetDto;
+        // TargetDto targetDto2 = targetDto;
 
 
-        targetDto2.setCustomerId(jwtService.extractCustomerId(jwtToken));
+        // targetDto2.setCustomerId(jwtService.extractCustomerId(jwtToken));
 
         Target target = mapper.mapDtoToModel(targetDto);
         Target savedTarget = targetRepository.save(target);
 
-        jobManager.scheduleJob(savedTarget);
+        JobKey job = new JobKey(savedTarget.getUrl(), savedTarget.getProtocol().name());
+        jobManager.scheduleJob(job);
+
         return mapper.mapModelToDto(savedTarget);
     }
 
@@ -73,6 +78,9 @@ public class TargetService {
 
         if (existTarget.isPresent()) {
             targetRepository.deleteById(id);
+            Target target = existTarget.get();
+            JobKey job = new JobKey(target.getName(), target.getCustomer().getEmail());
+            jobManager.removeJob(job);
         }
     }
 
@@ -110,12 +118,12 @@ public class TargetService {
         return result;
     }
 
-    private String getJwtTokenFromContext() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    // private String getJwtTokenFromContext() {
+    //     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        return (auth != null && auth.getCredentials() instanceof String)
-                ? (String) auth.getCredentials()
-                : null;
-    }
+    //     return (auth != null && auth.getCredentials() instanceof String)
+    //             ? (String) auth.getCredentials()
+    //             : null;
+    // }
 
 }
