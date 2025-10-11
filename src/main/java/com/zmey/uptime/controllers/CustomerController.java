@@ -24,6 +24,8 @@ public class CustomerController {
     @ResponseBody
     @ResponseStatus(code = HttpStatus.CREATED)
     public CustomerDto createCustomer(@RequestBody CustomerDto customer) {
+        Counter dCounter = Counter.getInstance();
+        dCounter.increment();
         return customerService.createCustomer(customer);
     }
 

@@ -52,7 +52,7 @@ public class JobManager {
 
     public void pauseJob(JobKey jobKey) {
         try {
-            scheduler.pauseJob(jobKey); // scheduleJob(jobDetail, trigger);
+            scheduler.pauseJob(jobKey);
         } catch (SchedulerException e) {
             log.info("error while runing job %s", jobKey.getName());
         }
