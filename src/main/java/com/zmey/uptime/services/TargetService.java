@@ -81,12 +81,16 @@ public class TargetService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         CustomerDto customerDto = (CustomerDto) authentication.getPrincipal();
-        List<Target> targets = targetRepository.findAllByCustomerId(customerDto.getId());
-
-        List<TargetDto> result = targets.stream()
-                .map(element -> mapper.mapModelToDto(element))
-                .collect(Collectors.toList());
-
-        return result;
+        try {
+            Thread.sleep(500L);
+            List<Target> targets = targetRepository.findAllByCustomerId(customerDto.getId());
+            List<TargetDto> result = targets.stream()
+                    .map(element -> mapper.mapModelToDto(element))
+                    .collect(Collectors.toList());
+            return result;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
