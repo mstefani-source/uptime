@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +30,9 @@ public class TargetService {
 
     @Autowired
     private TargetMapper mapper;
+
+    @Autowired
+    private Cache cache;
 
     @Autowired
     private JobManager jobManager;
@@ -82,12 +86,19 @@ public class TargetService {
 
         CustomerDto customerDto = (CustomerDto) authentication.getPrincipal();
         try {
-            Thread.sleep(500L);
-            List<Target> targets = targetRepository.findAllByCustomerId(customerDto.getId());
-            List<TargetDto> result = targets.stream()
-                    .map(element -> mapper.mapModelToDto(element))
-                    .collect(Collectors.toList());
-            return result;
+            Object cachedTargets = cache.getValue(customerDto.getId().toString() + ":all_targets");
+            List<TargetDto> targetsDto = new ArrayList<>();
+            if (cachedTargets != null) {
+                targetsDto = (List<TargetDto>) cachedTargets;
+            } else {
+                Thread.sleep(500L);
+                List<Target > targets = targetRepository.findAllByCustomerId(customerDto.getId());
+                targetsDto = targets.stream()
+                        .map(element -> mapper.mapModelToDto(element))
+                        .collect(Collectors.toList());
+                cache.setValue(customerDto.getId().toString() + ":all_targets", targetsDto, 1000);
+            }
+            return targetsDto;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;

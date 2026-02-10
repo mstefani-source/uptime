@@ -2,6 +2,7 @@ package com.zmey.uptime.services.targetprocessor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,6 +20,8 @@ public class Example {
 
     public static void main(String[] args) throws NoSuchElementException {
         Iterator<String> itr = exampleList.iterator();
+
+        HashMap<String,String> hm = new HashMap<>();
 
         try {
             while (itr.hasNext()) {
