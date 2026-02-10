@@ -3,15 +3,12 @@ package com.zmey.uptime.configs;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.NotImplementedException;
 import org.quartz.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.zmey.uptime.entities.enums.Protocol;
 import com.zmey.uptime.entities.enums.ProtocolHandler;
-
 import lombok.extern.log4j.Log4j2;
 
 @Component
@@ -32,9 +29,7 @@ public class ProtocolHandlerValidator {
         for (Protocol protocol : Protocol.values()) {
             log.info("---------> " + jobClassMap.get(protocol));
             if (jobClassMap.get(protocol) == null)
-               throw new NotImplementedException("No Handler for protocol " + protocol);
+                throw new NotImplementedException("No Handler for protocol " + protocol);
         }
-
     }
-
 }
