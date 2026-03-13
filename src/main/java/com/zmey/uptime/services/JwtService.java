@@ -1,7 +1,6 @@
 package com.zmey.uptime.services;
 
 import com.zmey.uptime.dto.CustomerDto;
-import com.zmey.uptime.entities.Customer;
 import com.zmey.uptime.entities.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

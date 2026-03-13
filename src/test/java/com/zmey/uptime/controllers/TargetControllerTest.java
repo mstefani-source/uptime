@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.hasKey;
 import com.zmey.uptime.entities.Target;
 import java.util.NoSuchElementException;
 
-import com.zmey.uptime.entities.enums.Role;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;

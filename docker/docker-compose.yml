@@ -5,8 +5,8 @@ networks:
   default:
     external: true
     name: docker_default
-services:
 
+services:
   db:
     image: postgres:17.4
     restart: always
@@ -28,5 +28,3 @@ services:
     ports:
       - 8081:8080
 
-# volumes:
-  # postgre_volume:
