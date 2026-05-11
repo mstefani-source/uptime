@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing
 public class UptimeApplication extends AbstractApplication {
 
-	public static void main(String[] args) {	
+	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(UptimeApplication.class);
 		app.addListeners(new ApplicationPidFileWriter());
 		app.run(args);
