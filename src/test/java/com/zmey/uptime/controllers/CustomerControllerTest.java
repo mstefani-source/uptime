@@ -1,14 +1,20 @@
 package com.zmey.uptime.controllers;
 
-import com.zmey.uptime.entities.Customer;
-import com.zmey.uptime.entities.Target;
-import com.zmey.uptime.repositories.CustomerRepository;
-import com.zmey.uptime.repositories.TargetRepository;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.*;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasKey;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -18,13 +24,14 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.zmey.uptime.entities.Customer;
+import com.zmey.uptime.entities.Target;
+import com.zmey.uptime.repositories.CustomerRepository;
+import com.zmey.uptime.repositories.TargetRepository;
 
+import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasEntry;
-import static org.hamcrest.Matchers.hasKey;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Testcontainers
@@ -92,10 +99,10 @@ class CustomerControllerTest {
 
         String payload = """
                 {
-                	"name": "Petrov",
-                	"email": "test@ya.ru",
-                	"password": "pw",
-                	"role": "ROLE_ADMIN"
+                    "name": "Petrov",
+                    "email": "test@ya.ru",
+                    "password": "pw",
+                    "role": "ROLE_ADMIN"
                 }
                 """;
 
